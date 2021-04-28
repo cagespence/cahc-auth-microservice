@@ -39,3 +39,6 @@ typings
 
 # Env
 .env
+
+# Workspace
+*.code-workspace
