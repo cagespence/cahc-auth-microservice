@@ -1,22 +1,26 @@
 ﻿import jwt from 'jsonwebtoken';
+import { getRepository } from 'typeorm';
+import User from '../entity/user/User';
 import {
-  LoginInfo, User, UserHidePassword, UserToken,
+  LoginInfo, User as UserType, UserHidePassword, UserToken,
 } from './types';
 
 const secret = process.env.SECRET || 'secret';
-const validationPattern = /(?=.*\d)(?=.* [a - z])(?=.* [A - Z]).{ 8,}/;
-const validationMessage = 'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters';
+const validationPattern = /^[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+const validationMessage = 'Must contain at least one number and one uppercase and lowercase letter, and 6 - 16 characters';
 
 // users hardcoded for simplicity, store in a db for production applications
 const users: User[] = [{ id: 1, username: 'test', password: 'test' }];
 
-const omitPassword = (user: User): UserHidePassword => {
+const omitPassword = (user: UserType): UserHidePassword => {
   const { password, ...userWithoutPassword } = user;
   return userWithoutPassword;
 };
 
 export const authenticate = async ({ username, password }: LoginInfo): Promise<UserToken> => {
-  const user = users.find((u) => u.username === username && u.password === password);
+  const userRepository = getRepository(User);
+
+  const user = await userRepository.findOne({ username, password });
 
   if (!user) throw new Error('Username or password is incorrect');
 
@@ -33,17 +37,26 @@ export const registerUser = async ({
   username,
   password,
 }: LoginInfo): Promise<UserHidePassword> => {
-  const user = users.find((u) => u.username === username);
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne({ username, password });
   if (user) {
     // user exists, throw error
     throw new Error(`User with name ${username} already exists`);
   }
+
   if (!validationPattern.test(password)) {
     // password not strong enough
     throw new Error(validationMessage);
   }
+
+  const newUser = new User();
+  newUser.username = username;
+  newUser.password = password;
+
+  const savedUser = await userRepository.save(newUser);
+
   // return the created user object
-  return { id: 1, username: 'test' };
+  return { ...omitPassword(savedUser) };
 };
 
 export const getAll = async () => users.map((u) => omitPassword(u));

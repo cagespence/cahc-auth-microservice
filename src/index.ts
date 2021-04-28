@@ -5,6 +5,8 @@ import cors from 'cors';
 import 'reflect-metadata';
 import env from 'dotenv';
 env.config();
+import { createConnection } from 'typeorm';
+import User from './entity/user/User';
 import jwt from './_helpers/jwt';
 import errorHandler from './_helpers/error-handler';
 
@@ -22,8 +24,22 @@ app.use('/users', require('./users/users.controller'));
 // global error handler
 app.use(errorHandler);
 
-// start server
-const port = process.env.NODE_ENV === 'production' ? 80 : 4000;
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+createConnection({
+  type: 'postgres',
+  host: 'localhost',
+  port: 5432,
+  username: 'cagespence',
+  password: '',
+  database: 'cagespence',
+  entities: [
+    User,
+  ],
+  synchronize: true,
+  logging: false,
+}).then((connection) => {
+  console.log(connection.name);
+  const port = process.env.NODE_ENV === 'production' ? 80 : 4000;
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  });
+}).catch((error) => console.log(error));
