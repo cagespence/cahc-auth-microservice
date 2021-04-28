@@ -6,6 +6,7 @@ import {
 } from './types';
 
 const secret = process.env.SECRET || 'secret';
+
 const validationPattern = /^[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 const validationMessage = 'Must contain at least one number and one uppercase and lowercase letter, and 6 - 16 characters';
 
