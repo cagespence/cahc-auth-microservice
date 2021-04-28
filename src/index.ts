@@ -5,6 +5,7 @@ import cors from 'cors';
 import env from 'dotenv';
 env.config();
 import { createConnection } from 'typeorm';
+import User from './entity/user/User';
 import jwt from './_helpers/jwt';
 import errorHandler from './_helpers/error-handler';
 import 'reflect-metadata';
@@ -31,16 +32,14 @@ createConnection({
   password: '',
   database: 'cagespence',
   entities: [
-    `${__dirname}/entity/**.js`,
+    User,
   ],
   synchronize: true,
   logging: false,
 }).then((connection) => {
-  // here you can start to work with your entities
+  console.log(connection.name);
+  const port = process.env.NODE_ENV === 'production' ? 80 : 4000;
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  });
 }).catch((error) => console.log(error));
-
-// start server
-const port = process.env.NODE_ENV === 'production' ? 80 : 4000;
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
