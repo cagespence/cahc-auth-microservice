@@ -14,7 +14,6 @@ const omitPassword = (user: User): UserHidePassword => {
 };
 
 export const authenticate = async ({ username, password }: LoginInfo): Promise<UserToken> => {
-  console.log(username, password);
   const user = users.find((u) => u.username === username && u.password === password);
 
   if (!user) throw new Error('Username or password is incorrect');
