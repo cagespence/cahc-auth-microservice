@@ -1,11 +1,17 @@
 ﻿import express from 'express';
-import { authenticate as auth, getAll as all } from './user.service';
+import { authenticate as auth, getAll as all, registerUser } from './user.service';
 
 const router = express.Router();
 
 // routes
 const authenticate = (req: any, res: any, next: any) => {
   auth(req.body)
+    .then((user) => res.json(user))
+    .catch(next);
+};
+
+const register = (req: any, res: any, next: any) => {
+  registerUser(req.body)
     .then((user) => res.json(user))
     .catch(next);
 };
