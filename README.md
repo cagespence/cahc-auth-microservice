@@ -1,5 +1,15 @@
-# node-jwt-authentication-api
+# CAHC auth microservice
 
-NodeJS JWT Authentication API
+TypeScript
+PostgreSQL
+Express
+TypeORM
 
-For documentation and instructions check out https://jasonwatmore.com/post/2018/08/06/nodejs-jwt-authentication-tutorial-with-example-api
+Run the development server 
+```npm run start:dev```
+
+Build the app
+```npm run build```
+
+Run the built app
+```npm run start```
