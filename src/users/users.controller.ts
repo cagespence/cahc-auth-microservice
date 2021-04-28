@@ -23,6 +23,7 @@ const getAll = (req: any, res: any, next: any) => {
 };
 
 router.post('/authenticate', authenticate);
+router.post('/register', register);
 router.get('/', getAll);
 
 module.exports = router;
