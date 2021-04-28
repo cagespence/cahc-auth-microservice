@@ -1,26 +1,7 @@
 ﻿import jwt from 'jsonwebtoken';
-
-interface LoginInfo {
-  username: string;
-  password: string;
-}
-
-interface User {
-  id: number;
-  username: string;
-  password: string;
-}
-
-interface UserHidePassword {
-  id: number;
-  username: string;
-}
-
-interface UserToken {
-  id: number;
-  username: string;
-  token: string;
-}
+import {
+  LoginInfo, User, UserHidePassword, UserToken,
+} from './types';
 
 const secret = process.env.SECRET || 'secret';
 
